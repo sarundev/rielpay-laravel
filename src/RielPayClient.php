@@ -15,7 +15,7 @@ use RielPay\Laravel\Exceptions\RielPayException;
 /** Thin, typed client for the RielPay REST API (https://rielpays.com/docs). */
 class RielPayClient
 {
-    public const VERSION = '1.0.1';
+    public const VERSION = '1.0.2';
 
     public function __construct(
         protected HttpFactory $http,
