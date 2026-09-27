@@ -7,7 +7,7 @@ Wing and every Bakong bank in Cambodia. Money settles straight to your own ABA a
 - Webhooks verified for you and turned into Laravel events
 - Safe automatic retries (idempotency keys), clear exceptions, a ready-made KHQR Blade component
 
-Requires PHP 8.1+ and Laravel 10, 11 or 12.
+Requires PHP 8.1+ and Laravel 10, 11, 12 or 13.
 
 ## Installation
 

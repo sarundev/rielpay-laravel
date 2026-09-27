@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1 — 2026-09-27
+
+- Support Laravel 13
+
 ## 1.0.0 — 2026-09-27
 
 - `RielPay::createPayment()`, `getPayment()`, `listPayments()`, `allPayments()`
