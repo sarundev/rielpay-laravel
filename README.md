@@ -12,7 +12,7 @@ Requires PHP 8.1+ and Laravel 10, 11 or 12.
 ## Installation
 
 ```bash
-composer require rielpay/laravel
+composer require sarundev/rielpay-laravel
 ```
 
 Add your keys to `.env` (Dashboard → Stores → your store):
@@ -123,7 +123,7 @@ button, which fires the real `payment.succeeded` webhook. Switch the store to **
 
 ## ភាសាខ្មែរ — ការណែនាំខ្លី
 
-1. ដំឡើង៖ `composer require rielpay/laravel`
+1. ដំឡើង៖ `composer require sarundev/rielpay-laravel`
 2. ដាក់ `RIELPAY_API_KEY` និង `RIELPAY_WEBHOOK_SECRET` ក្នុង `.env` (យកពី Dashboard → Stores)
 3. បង្កើត Payment៖ `RielPay::createPayment([...])` ហើយ Redirect ទៅ `$payment->checkout_url`
    ឬបង្ហាញ QR ក្នុងទំព័ររបស់អ្នក៖ `<x-rielpay-khqr :payment="$payment" />`
