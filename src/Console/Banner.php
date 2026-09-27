@@ -26,7 +26,7 @@ class Banner
         // Write to the underlying Symfony output: Laravel 13's console style (laravel/pao, when an
         // AI agent runs the command) strips box-drawing characters and collapses spaces.
         $out = $command->getOutput()->getOutput();
-        $footer = $subtitle.' · v'.RielPayClient::VERSION.' · rielpays.com';
+        $footer = $subtitle.' · v'.RielPayClient::version().' · rielpays.com';
 
         // No colours (AI agent, CI, piped output): one plain line instead of the big logo.
         if (! $out->isDecorated()) {

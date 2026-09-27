@@ -15,7 +15,20 @@ use RielPay\Laravel\Exceptions\RielPayException;
 /** Thin, typed client for the RielPay REST API (https://rielpays.com/docs). */
 class RielPayClient
 {
-    public const VERSION = '1.2.3';
+    /** Fallback when Composer can't tell us the installed version. */
+    public const VERSION = '1.2.5';
+
+    /** The installed package version, e.g. "1.2.5" (read from Composer, so it always matches the tag). */
+    public static function version(): string
+    {
+        try {
+            $v = \Composer\InstalledVersions::getPrettyVersion('rielpays/laravel');
+        } catch (\Throwable) {
+            $v = null;
+        }
+
+        return $v && preg_match('/^v?\d+\.\d+\.\d+$/', $v) ? ltrim($v, 'v') : self::VERSION;
+    }
 
     public function __construct(
         protected HttpFactory $http,
@@ -115,7 +128,7 @@ class RielPayClient
         return $this->http
             ->baseUrl(rtrim($this->baseUrl, '/'))
             ->withToken($this->apiKey)
-            ->withHeaders($headers + ['User-Agent' => 'rielpay-laravel/'.self::VERSION])
+            ->withHeaders($headers + ['User-Agent' => 'rielpay-laravel/'.self::version()])
             ->acceptJson()
             ->asJson()
             ->timeout($this->timeout);

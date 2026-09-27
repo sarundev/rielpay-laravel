@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.5 — 2026-09-27
+
+- The banner and User-Agent read the version from Composer, so they always match the installed tag (1.2.4 showed "v1.2.3")
+
+## 1.2.4 — 2026-09-27
+
+- Same code as 1.2.3 (tag created by hand)
+
 ## 1.2.3 — 2026-09-27
 
 - `rielpay:install` repairs a key pasted twice into the hidden prompt, and re-asks when a key doesn't look like `sk_…`/`whsec_…` + 32 characters
