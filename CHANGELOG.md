@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1 — 2026-09-27
+
+- Banner stays intact on Laravel 13 (written to the raw console output); without colours (AI agents, CI, pipes) a one-line header is shown instead of the big logo
+
 ## 1.2.0 — 2026-09-27
 
 - `php artisan rielpay:install`: RielPay banner, publishes the config, asks for your keys, writes them to `.env` without duplicate lines and tests the connection

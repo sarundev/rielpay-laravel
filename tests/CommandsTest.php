@@ -39,10 +39,26 @@ class CommandsTest extends TestCase
     {
         Http::fake(['*' => Http::response(['object' => 'list', 'has_more' => false, 'data' => []])]);
 
+        // Test output isn't decorated, so the compact header is used instead of the big logo.
         $this->artisan('rielpay:check')
-            ->expectsOutputToContain('██████╗')
+            ->expectsOutputToContain('RielPay · Setup check')
             ->expectsOutputToContain('rielpays.com')
             ->assertExitCode(0);
+    }
+
+    public function test_colour_terminals_get_the_full_logo(): void
+    {
+        $output = new \Symfony\Component\Console\Output\BufferedOutput(decorated: true);
+        $command = new \RielPay\Laravel\Console\CheckCommand;
+        $command->setLaravel($this->app);
+        $command->setOutput(new \Illuminate\Console\OutputStyle(new \Symfony\Component\Console\Input\ArrayInput([]), $output));
+
+        \RielPay\Laravel\Console\Banner::render($command, 'Setup check');
+
+        $text = preg_replace('/\e\[[0-9;]*m/', '', $output->fetch());
+        foreach (explode("\n", \RielPay\Laravel\Console\Banner::plain()) as $row) {
+            $this->assertStringContainsString($row, $text); // every logo row intact, incl. ╗ ║ ╝
+        }
     }
 
     public function test_check_fails_without_a_key(): void
@@ -63,7 +79,7 @@ class CommandsTest extends TestCase
         Http::fake(['*' => Http::response(['object' => 'list', 'has_more' => false, 'data' => []])]);
 
         $this->artisan('rielpay:install', ['--key' => 'sk_live_new', '--webhook-secret' => 'whsec_new', '--no-interaction' => true])
-            ->expectsOutputToContain('██████╗')
+            ->expectsOutputToContain('RielPay · KHQR payments for Laravel')
             ->expectsOutputToContain('RielPay is ready.')
             ->assertExitCode(0);
 
