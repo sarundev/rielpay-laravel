@@ -1,8 +1,12 @@
 # Changelog
 
-## 1.2.2 — 2026-09-27
+## 1.2.3 — 2026-09-27
 
 - `rielpay:install` repairs a key pasted twice into the hidden prompt, and re-asks when a key doesn't look like `sk_…`/`whsec_…` + 32 characters
+
+## 1.2.2 — 2026-09-27
+
+- Same code as 1.2.1 (tag created by hand)
 
 ## 1.2.1 — 2026-09-27
 
