@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.2 — 2026-09-27
+
+- `rielpay:install` repairs a key pasted twice into the hidden prompt, and re-asks when a key doesn't look like `sk_…`/`whsec_…` + 32 characters
+
 ## 1.2.1 — 2026-09-27
 
 - Banner stays intact on Laravel 13 (written to the raw console output); without colours (AI agents, CI, pipes) a one-line header is shown instead of the big logo

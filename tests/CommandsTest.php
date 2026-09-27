@@ -114,10 +114,43 @@ class CommandsTest extends TestCase
         Http::fake(['*' => Http::response(['object' => 'list', 'has_more' => false, 'data' => []])]);
 
         $this->artisan('rielpay:install')
-            ->expectsQuestion('Secret API key (sk_...)', 'sk_typed')
-            ->expectsQuestion('Webhook signing secret (whsec_...)', 'whsec_typed')
+            ->expectsQuestion('Secret API key (sk_...)', 'sk_AAAAAAAAAAAAAAAAbbbbbbbbbbbbbbbb')
+            ->expectsQuestion('Webhook signing secret (whsec_...)', 'whsec_CCCCCCCCCCCCCCCCdddddddddddddddd')
             ->assertExitCode(0);
 
-        $this->assertStringContainsString('RIELPAY_API_KEY=sk_typed', $this->env());
+        $this->assertStringContainsString("RIELPAY_API_KEY=sk_AAAAAAAAAAAAAAAAbbbbbbbbbbbbbbbb\n", $this->env());
+    }
+
+    public function test_install_repairs_a_key_pasted_twice(): void
+    {
+        File::put($this->envDir.'/.env', "APP_NAME=Shop\n");
+        config(['rielpay.api_key' => null, 'rielpay.webhook_secret' => null]);
+        $this->app->forgetInstance(RielPayClient::class);
+        Http::fake(['*' => Http::response(['object' => 'list', 'has_more' => false, 'data' => []])]);
+
+        $this->artisan('rielpay:install')
+            ->expectsQuestion('Secret API key (sk_...)', 'sk_AAAAAAAAAAAAAAAAbbbbbbbbbbbbbbbbsk_AAAAAAAAAAAAAAAAbbbbbbbbbbbbbbbb')
+            ->expectsOutputToContain('pasted twice')
+            ->expectsQuestion('Webhook signing secret (whsec_...)', 'whsec_CCCCCCCCCCCCCCCCdddddddddddddddd')
+            ->assertExitCode(0);
+
+        $this->assertStringContainsString("RIELPAY_API_KEY=sk_AAAAAAAAAAAAAAAAbbbbbbbbbbbbbbbb\n", $this->env());
+    }
+
+    public function test_install_asks_again_for_a_malformed_key(): void
+    {
+        File::put($this->envDir.'/.env', "APP_NAME=Shop\n");
+        config(['rielpay.api_key' => null, 'rielpay.webhook_secret' => null]);
+        $this->app->forgetInstance(RielPayClient::class);
+        Http::fake(['*' => Http::response(['object' => 'list', 'has_more' => false, 'data' => []])]);
+
+        $this->artisan('rielpay:install')
+            ->expectsQuestion('Secret API key (sk_...)', 'sk_short')
+            ->expectsOutputToContain("doesn't look like")
+            ->expectsQuestion('Secret API key (sk_...)', 'sk_AAAAAAAAAAAAAAAAbbbbbbbbbbbbbbbb')
+            ->expectsQuestion('Webhook signing secret (whsec_...)', 'whsec_CCCCCCCCCCCCCCCCdddddddddddddddd')
+            ->assertExitCode(0);
+
+        $this->assertStringContainsString("RIELPAY_API_KEY=sk_AAAAAAAAAAAAAAAAbbbbbbbbbbbbbbbb\n", $this->env());
     }
 }

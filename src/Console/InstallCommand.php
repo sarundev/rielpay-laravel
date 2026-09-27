@@ -29,8 +29,12 @@ class InstallCommand extends Command
 
         // 2. Keys → .env (asked for interactively; hidden while typing)
         $this->line('  <fg=gray>Find these in the RielPay dashboard → Stores → your store.</>');
-        $key = $this->option('key') ?? $this->askSecretFor('rielpay.api_key', 'Secret API key (sk_...)');
-        $secret = $this->option('webhook-secret') ?? $this->askSecretFor('rielpay.webhook_secret', 'Webhook signing secret (whsec_...)');
+        $key = $this->option('key') !== null
+            ? $this->clean($this->option('key'), 'sk_')
+            : $this->askSecretFor('rielpay.api_key', 'Secret API key (sk_...)', 'sk_');
+        $secret = $this->option('webhook-secret') !== null
+            ? $this->clean($this->option('webhook-secret'), 'whsec_')
+            : $this->askSecretFor('rielpay.webhook_secret', 'Webhook signing secret (whsec_...)', 'whsec_');
 
         $this->writeEnv([
             'RIELPAY_API_KEY' => $key,
@@ -55,15 +59,51 @@ class InstallCommand extends Command
     }
 
     /** Ask for a value unless it's already set; empty answers keep the current value. */
-    protected function askSecretFor(string $configKey, string $question): ?string
+    /**
+     * Ask for a key (hidden input); empty keeps the current value. Wrong-looking answers are
+     * explained and asked again, up to 3 times.
+     */
+    protected function askSecretFor(string $configKey, string $question, string $prefix): ?string
     {
         if (! $this->input->isInteractive()) {
             return null;
         }
         $current = config($configKey);
-        $answer = $this->secret($current ? "{$question} — leave empty to keep the current one" : $question);
+        for ($attempt = 1; $attempt <= 3; $attempt++) {
+            $answer = $this->secret($current ? "{$question} — leave empty to keep the current one" : $question);
+            if ($answer === null || trim($answer) === '') {
+                return null;
+            }
+            $value = $this->clean($answer, $prefix);
+            if (self::looksValid($value, $prefix)) {
+                return $value;
+            }
+            $this->components->warn("That doesn't look like a RielPay {$prefix}… value ({$prefix} followed by 32 characters). Copy it again from the dashboard.");
+        }
 
-        return $answer !== null && trim($answer) !== '' ? trim($answer) : null;
+        return null;
+    }
+
+    /**
+     * Trim the value and undo an accidental double paste (easy to do in a hidden prompt):
+     * "sk_ABCsk_ABC" becomes "sk_ABC".
+     */
+    protected function clean(string $value, string $prefix): string
+    {
+        $value = trim($value, " \t\n\r\0\x0B\"'");
+        $half = intdiv(strlen($value), 2);
+        if (strlen($value) % 2 === 0 && $half > strlen($prefix)
+            && str_starts_with($value, $prefix) && substr($value, 0, $half) === substr($value, $half)) {
+            $this->components->warn('The value was pasted twice — keeping one copy.');
+            $value = substr($value, 0, $half);
+        }
+
+        return $value;
+    }
+
+    public static function looksValid(string $value, string $prefix): bool
+    {
+        return (bool) preg_match('/^'.preg_quote($prefix, '/').'[A-Za-z0-9_-]{32}$/', $value);
     }
 
     /**
