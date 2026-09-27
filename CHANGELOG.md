@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0 — 2026-09-27
+
+- Package renamed to `rielpays/laravel` (was `sarundev/rielpay-laravel`). Install with `composer require rielpays/laravel`; the PHP namespace `RielPay\Laravel` is unchanged, so no code changes are needed.
+
 ## 1.0.2 — 2026-09-27
 
 - Don't pin Guzzle: use whatever Laravel's HTTP client needs (Laravel 13 uses Guzzle 8)

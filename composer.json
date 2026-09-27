@@ -1,5 +1,5 @@
 {
-    "name": "sarundev/rielpay-laravel",
+    "name": "rielpays/laravel",
     "description": "Official Laravel SDK for RielPay — accept KHQR payments from every bank in Cambodia.",
     "keywords": [
         "rielpay",
