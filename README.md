@@ -15,7 +15,16 @@ Requires PHP 8.1+ and Laravel 10, 11, 12 or 13.
 composer require rielpays/laravel
 ```
 
-Add your keys to `.env` (Dashboard → Stores → your store):
+Then run the installer — it shows the RielPay logo, publishes the config, asks for your keys (hidden while
+typing), saves them to `.env` and tests the connection:
+
+```bash
+php artisan rielpay:install
+```
+
+Check your setup at any time with `php artisan rielpay:check`.
+
+Or add your keys to `.env` yourself (Dashboard → Stores → your store):
 
 ```dotenv
 RIELPAY_API_KEY=sk_...           # API keys tab
@@ -123,7 +132,7 @@ button, which fires the real `payment.succeeded` webhook. Switch the store to **
 
 ## ភាសាខ្មែរ — ការណែនាំខ្លី
 
-1. ដំឡើង៖ `composer require rielpays/laravel`
+1. ដំឡើង៖ `composer require rielpays/laravel` ហើយរត់ `php artisan rielpay:install`
 2. ដាក់ `RIELPAY_API_KEY` និង `RIELPAY_WEBHOOK_SECRET` ក្នុង `.env` (យកពី Dashboard → Stores)
 3. បង្កើត Payment៖ `RielPay::createPayment([...])` ហើយ Redirect ទៅ `$payment->checkout_url`
    ឬបង្ហាញ QR ក្នុងទំព័ររបស់អ្នក៖ `<x-rielpay-khqr :payment="$payment" />`

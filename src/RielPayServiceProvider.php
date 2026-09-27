@@ -31,6 +31,10 @@ class RielPayServiceProvider extends ServiceProvider
         $this->publishes([__DIR__.'/../resources/views' => resource_path('views/vendor/rielpay')], 'rielpay-views');
         Blade::component('rielpay-khqr', KhqrCard::class);
 
+        if ($this->app->runningInConsole()) {
+            $this->commands([Console\InstallCommand::class, Console\CheckCommand::class]);
+        }
+
         // Webhook endpoint. Registered outside the "web" group, so no CSRF token is needed.
         if ($path = config('rielpay.webhook_path')) {
             Route::post($path, WebhookController::class)->name('rielpay.webhook');

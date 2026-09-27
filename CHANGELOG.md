@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0 — 2026-09-27
+
+- `php artisan rielpay:install`: RielPay banner, publishes the config, asks for your keys, writes them to `.env` without duplicate lines and tests the connection
+- `php artisan rielpay:check`: shows your configuration and verifies the API key against RielPay
+
 ## 1.1.0 — 2026-09-27
 
 - Package renamed to `rielpays/laravel` (was `sarundev/rielpay-laravel`). Install with `composer require rielpays/laravel`; the PHP namespace `RielPay\Laravel` is unchanged, so no code changes are needed.

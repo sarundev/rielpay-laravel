@@ -1,0 +1,2 @@
+providers:
+  - RielPay\Laravel\RielPayServiceProvider
